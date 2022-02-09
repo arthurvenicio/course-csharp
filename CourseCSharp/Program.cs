@@ -13,24 +13,13 @@ namespace CourseCSharp
         {
 
             string sourcePath = @"c:\temp\file1.txt";
-            string targePath = @"c:\temp\file2.txt";
-            try
-            {
-                string[] lines =  File.ReadAllLines(sourcePath);
+            
 
-                using(StreamWriter sr = File.AppendText(targePath))
-                {
-                    foreach(string line in lines)
-                    {
-                        sr.WriteLine(line.ToUpper());
-                    }
-                }
-            }
-            catch(IOException e)
-            {
-                Console.WriteLine($"An error occurred");
-                Console.WriteLine(e.Message);
-            }
+            Console.WriteLine(Path.GetDirectoryName(sourcePath));
+            Console.WriteLine(Path.GetFileName(sourcePath));
+            Console.WriteLine(Path.GetFileNameWithoutExtension(sourcePath));
+            Console.WriteLine(Path.GetRandomFileName());
+            Console.WriteLine(Path.GetTempPath());
 
         }
     }
