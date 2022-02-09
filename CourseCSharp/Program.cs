@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.IO;
+using System.Globalization;
 using System.Collections.Generic;
 using System;
 using CourseCSharp.Entities;
@@ -11,34 +12,24 @@ namespace CourseCSharp
         static void Main(string[] args)
         {
 
+            string sourcePath = @"c:\temp\file1.txt";
+            string targePath = @"c:\temp\file2.txt";
             try
             {
-                Console.WriteLine("Enter account data: ");
-                Console.Write("Number: ");
-                int accountNumber = int.Parse(Console.ReadLine());
-                Console.Write("Holder: ");
-                string accountHolder = Console.ReadLine();
-                Console.Write("Initial balance: ");
-                double initialBalance = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-                Console.Write("Withdraw limit: ");
-                double withdrawnLimit = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                string[] lines =  File.ReadAllLines(sourcePath);
 
-                Account acc = new Account(accountNumber, accountHolder, initialBalance, withdrawnLimit);
-                
-                Console.WriteLine(" ");
-                Console.Write("Enter amount for withdraw: ");
-                double amount  = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-                acc.Withdraw(amount);
-
-                Console.WriteLine($"New balance: {acc.Balance.ToString("F2", CultureInfo.InvariantCulture)}");
+                using(StreamWriter sr = File.AppendText(targePath))
+                {
+                    foreach(string line in lines)
+                    {
+                        sr.WriteLine(line.ToUpper());
+                    }
+                }
             }
-            catch(DomainException e)
+            catch(IOException e)
             {
-                Console.WriteLine($"Withdraw error: {e.Message}");
-            }
-            catch(FormatException e)
-            {
-                 Console.WriteLine($"Format input error: {e.Message}");
+                Console.WriteLine($"An error occurred");
+                Console.WriteLine(e.Message);
             }
 
         }
