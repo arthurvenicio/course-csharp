@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Globalization;
+using System.Collections.Generic;
+using System;
 using CourseCSharp.Entities;
 
 namespace CourseCSharp
@@ -7,15 +9,44 @@ namespace CourseCSharp
     {
         static void Main(string[] args)
         {
-            Account acc = new Account(1001, "Alex", 0.0);
-            BusinessAccount bacc = new BusinessAccount(1002, "Arthur", 5000.00, 300.00);
-            Account bacc1 = new BusinessAccount(1003, "Arthur", 5000.00, 300.00);
+            List<Employee> employees = new List<Employee>();
+
+            Console.Write("Enter the number of employees: ");
+            int n = int.Parse(Console.ReadLine());
+
+            for(int i = 1; i <= n; i++)
+            {
+                Console.WriteLine($"Employee #{i} data:");
+                Console.Write("Outsourced (y/n)? ");
+                string o = Console.ReadLine();
 
 
-            Account acc1 = bacc;
-            BusinessAccount bacc2 = (BusinessAccount)bacc1;
-            
-            bacc2.Loan(100.00);
+                Console.Write("Name: ");
+                string name = Console.ReadLine();
+                Console.Write("Hours: ");
+                int hours = int.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                Console.Write("Value per hour: ");
+                double valuePerHour = double.Parse(Console.ReadLine());
+
+                switch(o)
+                {
+                    case "y":
+                        Console.Write("Additional charge: ");
+                        double additionalCharge = double.Parse(Console.ReadLine());
+                        Employee e = new OutsourceEmployee(name, hours, valuePerHour, additionalCharge);
+                        employees.Add(e);
+                        break;
+                    default:
+                        Employee e2 = new Employee(name, hours, valuePerHour);
+                        employees.Add(e2);
+                        break;
+                }
+            }
+
+            Console.WriteLine("PAYMENTS:");
+            foreach(Employee e in employees){
+                Console.WriteLine(e);
+            }
         }
     }
 }
