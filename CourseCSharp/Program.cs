@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System;
 using System.IO;
+using CourseCSharp.Entities;
 
 namespace CourseCSharp
 {
@@ -25,9 +26,10 @@ namespace CourseCSharp
                         string[] texts = line.Split(",");
                         string title = texts[0];
                         double price = double.Parse(texts[1], CultureInfo.InvariantCulture);
-                        double quantity = double.Parse(texts[2], CultureInfo.InvariantCulture);
-                        string result = title + "," + (price * quantity).ToString("F2", CultureInfo.InvariantCulture);
-                        sw.WriteLine(result);
+                        int quantity = int.Parse(texts[2], CultureInfo.InvariantCulture);
+
+                        Product p = new Product(title, price, quantity);
+                        sw.WriteLine($"{p.Name}, {p.Total().ToString("F2", CultureInfo.InvariantCulture)}");
                     }
                 }
             }catch(IOException e)
