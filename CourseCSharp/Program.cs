@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using CourseCSharp.Entities;
+using CourseCSharp.Services;
 
 namespace CourseCSharp
 {
@@ -9,34 +10,29 @@ namespace CourseCSharp
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Enter rental data");
+            Console.Write("Car model: ");
+            string model = Console.ReadLine();
+            Console.Write("Pickup (dd/MM/yy HH:mm): ");
+            DateTime start = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+            Console.Write("Finish (dd/MM/yy HH:mm): ");
+            DateTime finish = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
 
-            string sourcePath = @"c:\temp\file.csv";
-            string targetPath = @"c:\temp\out\file2.csv";
 
-           
-            try{
-                string[] lines = File.ReadAllLines(sourcePath);
+            Console.Write("Enter price per hour: ");
+            double hour = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+            Console.Write("Enter price per day: ");
+            double day = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
 
-                Directory.CreateDirectory(Path.GetDirectoryName(sourcePath) + @"\out");
 
-                using(StreamWriter sw = File.AppendText(targetPath))
-                {
-                    foreach(string line in lines)
-                    {
-                        string[] texts = line.Split(",");
-                        string title = texts[0];
-                        double price = double.Parse(texts[1], CultureInfo.InvariantCulture);
-                        int quantity = int.Parse(texts[2], CultureInfo.InvariantCulture);
+            CarRental carRental = new CarRental(start, finish, new Vehicle(model));
+            RentalService rentalService = new RentalService(hour, day);
 
-                        Product p = new Product(title, price, quantity);
-                        sw.WriteLine($"{p.Name}, {p.Total().ToString("F2", CultureInfo.InvariantCulture)}");
-                    }
-                }
-            }catch(IOException e)
-            {
-                Console.WriteLine($"An erro as ocurred: {e.Message}");
-            }
 
+            rentalService.ProcessInvoice(carRental);
+
+            Console.WriteLine("INVOICE:");
+            Console.WriteLine(carRental.Invoice);
         }
     }
 }
