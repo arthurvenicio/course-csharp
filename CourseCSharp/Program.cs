@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CourseCSharp.Entities;
+using System.IO;
 using System;
 
 namespace CourseCSharp
@@ -8,40 +8,41 @@ namespace CourseCSharp
     {
         static void Main(string[] args)
         {
-            HashSet<Student> CourseA = new HashSet<Student>();
-            HashSet<Student> CourseB = new HashSet<Student>();
-            HashSet<Student> CourseC = new HashSet<Student>();
 
-            Console.Write("How many students for course A? ");
-            int n = int.Parse(Console.ReadLine());
+            Console.Write("Enter file full path: ");
+            string path = Console.ReadLine();
 
-            for(int i = 1; i <= n; i++)
+            try{
+                using (StreamReader sr = File.OpenText(path))
+                {
+                    Dictionary<string, int> dictionary = new Dictionary<string, int>();
+                    while(!sr.EndOfStream)
+                    {
+
+                        string[] usr = sr.ReadLine().Split(',');
+                        string key = usr[0];
+                        int value = int.Parse(usr[1]);
+
+                        if(dictionary.ContainsKey(key))
+                        {
+                            dictionary[key] += value; 
+                        }else
+                        {
+                            dictionary[key] = value;
+                        }
+                    }
+
+                    
+                    foreach(KeyValuePair<string, int> item in dictionary)
+                    {
+                        Console.WriteLine($"{item.Key} : {item.Value}");
+                    }
+                }
+            }catch(IOException e)
             {
-                int id = int.Parse(Console.ReadLine());
-                CourseA.Add(new Student { Id = id});
+                Console.WriteLine(e.Message);
             }
 
-            Console.Write("How many students for course B? ");
-            n = int.Parse(Console.ReadLine());
-            for(int i = 1; i <= n; i++)
-            {
-                int id = int.Parse(Console.ReadLine());
-                CourseB.Add(new Student { Id = id});
-            }
-
-            Console.Write("How many students for course C? ");
-            n = int.Parse(Console.ReadLine());
-            for(int i = 1; i <= n; i++)
-            {
-                int id = int.Parse(Console.ReadLine());
-                CourseC.Add(new Student { Id = id});
-            }
-
-            HashSet<Student> all = new HashSet<Student>(CourseA);
-            all.UnionWith(CourseB);
-            all.UnionWith(CourseC);
-
-            Console.WriteLine($"Total students: {all.Count}");
         }
     }
 }
